@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <title>Luis Ángel Page</title>
+    <style>
+        @font-face {
+            font-family: 'Blacklisted';
+            src: url('fonts/Blacklisted.ttf') format('truetype');
+        }
+
+        body {
+            background-image: url('https://i.etsystatic.com/5877854/r/il/842306/4743860934/il_fullxfull.4743860934_l6ix.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            transition: background-image 0.5s ease-in-out;
+        }
+        .navbar-light {
+            background: linear-gradient(-45deg, #bf70ffab, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+       .image-carousel {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+            border: 0px solid #ccc;
+            height: 300px;
+            align-items: center;
+            background: linear-gradient(-45deg, #bf70ffab, #ffffff); 
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
+        }
+
+        .image-carousel img {
+            height: 200px;
+            margin-left: 30px;
+            margin-right: 20px;
+            transition: transform 0.3s, border 0.3s, filter 0.3s, box-shadow 0.3s;
+            filter: blur(1.5px);
+        }
+
+        .image-carousel img:hover {
+            transform: scale(1.2);
+            filter: blur(0px);
+            box-shadow: 0 0 15px #000000;
+        }
+
+        .cuadro-negro {
+            background-color: rgba(255, 255, 255, 0);
+            padding: 20px;
+            border-radius: 5px;
+            color: rgb(255, 255, 255);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cuadro-negro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0);
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        .bienvenidos {
+            font-family: 'Blacklisted', Arial, sans-serif;
+        }
+        
+        .dropdown-menu {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+        }
+        
+        .dropdown-item {
+            color: #333;
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+            text-decoration: none;
+        }
+        
+        .sql-clean {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="color:rgb(0, 0, 0);">INICIO</a>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" 
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:rgb(0, 0, 0);">Unidad 1</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
+                            <a class="dropdown-item" href="luis01.php">Práctica 1</a><br>
+                            <a class="dropdown-item" href="l02.php">Práctica 2</a><br>
+                            <a class="dropdown-item" href="luis03.php">Práctica 3</a><br>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" 
+                           data-toggle="dropdown" aria-haspopup="true" 
+                           aria-expanded="false" style="color: rgb(0, 0, 0);">Unidad 2</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                            <a class="dropdown-item" href="luis04.PHP">Práctica 4</a><br>
+                            <a class="dropdown-item" href="luis05.php">Práctica 5</a><br>
+                            <a class="dropdown-item" href="luis06.html">Práctica 6</a><br>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" 
+                           data-toggle="dropdown" aria-haspopup="true" 
+                           aria-expanded="false" style="color: rgb(0, 0, 0);">Unidad 3</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
+                            <a class="dropdown-item" href="luis07.html">Práctica 7</a><br>
+                            <a class="dropdown-item" href="luis08.html">Práctica 8</a><br>
+                            <a class="dropdown-item" href="luis09.html">Práctica 9 - Rick & Morty y Harry Potter</a><br>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink4" 
+                           data-toggle="dropdown" aria-haspopup="true" 
+                           aria-expanded="false" style="color: rgb(0, 0, 0);">SQL</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink4">
+                            <a class="dropdown-item" href="download_sql.php?file=procesadores_pc.sql"><span class="sql-clean">SQL - Procesadores PC </span></a><br>
+                            <a class="dropdown-item" href="download_sql.php?file=cetis131.sql"><span class="sql-clean">SQL - CETIS 131 </span></a><br>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="jumbotron cuadro-negro">
+        <h1 class="display-4 bienvenidos" style="text-align: center; color: white; text-shadow: 0 1 1 black;">Bienvenidos</h1>
+        <p class="lead" style="text-align: center;">Esta página está dedicada a la materia de Implementa Base de Datos Relacionales en un sistema de Información.</p>
+        <hr class="my-4">
+        <p style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Por Luis Ángel Cruz Pérez</p>
+        <p style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Del Grupo 4B</p>
+    </div>
+    <div class="image-carousel">
+        <img class="dynamic-border" src="img/graduation.jpeg" alt="Imagen 1">
+        <img class="dynamic-border" src="img/damn.jpeg" alt="Imagen 2">
+        <img class="dynamic-border" src="img/veteran.jpeg" alt="Imagen 3">
+        <img class="dynamic-border" src="img/yeezus.jpeg" alt="Imagen 4">
+        <img class="dynamic-border" src="img/queen.jpeg" alt="Imagen 5">
+        <img class="dynamic-border" src="img/ilay.jpeg" alt="Imagen 6">
+        <img class="dynamic-border" src="img/tpab.jpeg" alt="Imagen 7">
+        <img class="dynamic-border" src="img/nomoretearz.jpeg" alt="Imagen 8">
+    </div>
+</body>
+</html>

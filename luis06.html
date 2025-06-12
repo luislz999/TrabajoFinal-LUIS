@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Search</title>
+    <style>
+        body {
+            background-color: #06A4F7; 
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        .ash-pikachu {
+            width: 320px;
+            height: 320px;
+            position: absolute;
+            top: 40px; 
+            left: 40px;
+        }
+
+        .pokeImg {
+            width: 270px; 
+            height: 270px;
+            position: absolute;
+            top: 40px; 
+            right: 40px; 
+        }
+
+        .button {
+            width: 60px;
+            height: 60px; 
+            background-color: #1C91EE; 
+            border-color: #ffcc00;
+            border-radius: 12px; 
+            position: absolute;
+            top: 640px;
+            left: 540px; 
+        }
+
+        .pokeimg1 {
+            position: absolute;
+            font-size: 22px; 
+            color: #333333; 
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        .placeholder {
+            width: 130px;
+            height: 55px; 
+            position: absolute;
+            top: 640px; 
+            left: 390px; 
+            font-size: 17px;
+            padding: 6px;
+        }
+    </style>
+</head>
+<body>
+    <img src="img/fondo.jpeg" alt="Ash and Pikachu" class="ash-pikachu">
+    <input type="text" placeholder="PIKACHU" id="pokeName" class="placeholder" value="charizard">
+    <img src="img/pokebola.jpeg" alt="pokebola" id="pokeImg" class="pokeImg">
+
+    <div id="pokename" class="pokeimg1" style="left: 400px; top: 100px;">Nombre del Pokémon:</div>
+    <div id="pokehe" class="pokeimg1" style="left: 400px; top: 150px;">Altura del Pokémon:</div>
+    <div id="pokewe" class="pokeimg1" style="left: 400px; top: 200px;">Peso del Pokémon:</div>
+    <div id="poketype" class="pokeimg1" style="left: 400px; top: 250px;">Tipo del Pokémon:</div>
+    <div id="pokeitem" class="pokeimg1" style="left: 400px; top: 300px;">Item del Pokémon:</div>
+    <div id="pokemove1" class="pokeimg1" style="left: 780px; top: 100px;">Movimiento del Pokémon:</div>
+    <div id="pokemove2" class="pokeimg1" style="left: 780px; top: 150px;">Movimiento del Pokémon:</div>
+    <div id="pokemove3" class="pokeimg1" style="left: 780px; top: 200px;">Movimiento del Pokémon:</div>
+    <div id="pokemove4" class="pokeimg1" style="left: 780px; top: 250px;">Movimiento del Pokémon:</div>
+
+    <button onclick="fetchPokemon()" class="button"></button>
+
+    <script>
+        const fetchPokemon = () => {
+            const pokeNameInput = document.getElementById("pokeName");
+            let pokeName = pokeNameInput.value;
+
+            pokeName = pokeName.toLowerCase();
+            const url = `https://pokeapi.co/api/v2/pokemon/${pokeName}`;
+
+            fetch(url)
+                .then((res) => {
+                    if (res.status !== 200) {
+                        console.log(res);
+                        return;
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    if (data) {
+                        console.log(data);
+                        let pokeImg = data.sprites.front_default;
+                        pokeImage(pokeImg);
+
+                        let name = document.getElementById("pokename");
+                        name.innerHTML = `Nombre del Pokémon: ${data.forms[0].name}`;
+
+                        let element1 = document.getElementById("pokehe");
+                        element1.innerHTML = `Altura del Pokémon: ${data.height}`;
+
+                        let element2 = document.getElementById("pokewe");
+                        element2.innerHTML = `Peso del Pokémon: ${data.weight}`;
+
+                        let element3 = document.getElementById("poketype");
+                        element3.innerHTML = `Tipo del Pokémon: ${data.types[0].type.name}`;
+
+                        let element4 = document.getElementById("pokeitem");
+                        element4.innerHTML = `Item del Pokémon: ${data.held_items.length > 0 ? data.held_items[0].item.name : 'Ninguno'}`;
+
+                        let element5 = document.getElementById("pokemove1");
+                        element5.innerHTML = `Movimiento del Pokémon: ${data.moves[0] ? data.moves[0].move.name : 'Ninguno'}`;
+
+                        let element6 = document.getElementById("pokemove2");
+                        element6.innerHTML = `Movimiento del Pokémon: ${data.moves[1] ? data.moves[1].move.name : 'Ninguno'}`;
+
+                        let element7 = document.getElementById("pokemove3");
+                        element7.innerHTML = `Movimiento del Pokémon: ${data.moves[2] ? data.moves[2].move.name : 'Ninguno'}`;
+
+                        let element8 = document.getElementById("pokemove4");
+                        element8.innerHTML = `Movimiento del Pokémon: ${data.moves[3] ? data.moves[3].move.name : 'Ninguno'}`;
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error fetching Pokémon:", err);
+                });
+        };
+
+        const pokeImage = (url) => {
+            const pokePhoto = document.getElementById("pokeImg");
+            pokePhoto.src = url;
+        };
+
+        window.onload = () => {
+            fetchPokemon();
+        };
+    </script>
+</body>
+</html>

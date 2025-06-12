@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter & Rick and Morty API</title>
+</head>
+<body>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        :root{
+            --primary-color: #333333;
+            --secondary-color: #555555;
+            --terceary-color: #222222;
+            --hp-color: #740001;
+            --rm-color: #97ce4c;
+        }
+        body{
+            background-color: var(--primary-color);
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: 0;
+            color: #ffffff;
+        }
+        header{
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #000000;
+        }
+        .search{
+            background-color: transparent;
+            border: 2px solid #ffffff;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 15px;
+            padding: 10px 16px;
+            color: #ffffff;
+        }
+        .search::placeholder{
+            color: #ffffff;
+        }
+        .search:focus{
+            outline: none;
+            background-color: var(--terceary-color);
+        }
+        main{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .character{
+            width: 300px;
+            margin: 15px;
+            background-color: var(--secondary-color);
+            box-shadow: 0 5px 5px black;
+            position: relative;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+        .character.hp {
+            border: 4px solid var(--hp-color);
+        }
+        .character.rm {
+            border: 4px solid var(--rm-color);
+        }
+        .character img{
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+        .character-info{
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            padding: 8px 15px 15px;
+        }
+        .character-info h3{
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .character-info .details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .overview{
+            background-color: var(--terceary-color);
+            color: #ffffff;
+            padding: 32px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            max-height: 100%;
+            transform: translateY(101%);
+            overflow-y: auto;
+            transition: transform 0.3s ease-in;
+        }
+        .character:hover .overview{
+            transform: translateY(0);
+        }
+        /* Navigation menu */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 20px;
+        }
+        .nav-menu li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .nav-menu li a:hover {
+            color: #97ce4c;
+        }
+        .house-badge {
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .gryffindor { background-color: #740001; }
+        .slytherin { background-color: #1a472a; }
+        .ravenclaw { background-color: #0e1a40; }
+        .hufflepuff { background-color: #ecb939; color: black; }
+        .status-alive { color: lightgreen; }
+        .status-dead { color: red; }
+        .status-unknown { color: orange; }
+        /* Selector de API */
+        .api-selector {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .api-selector select {
+            background-color: var(--terceary-color);
+            color: white;
+            border: 2px solid #ffffff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .api-selector select:focus {
+            outline: none;
+        }
+        .api-selector select option {
+            background-color: var(--terceary-color);
+            color: white;
+        }
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+    </style>
+
+<header>
+    <nav>
+        <ul class="nav-menu">
+            <li><a href="index.html">Inicio</a></li>
+        </ul>
+    </nav>
+    
+    <div class="header-controls">
+        <div class="api-selector">
+            <select id="apiSelector">
+                <option value="rick" selected>Rick & Morty</option>
+                <option value="harry">Harry Potter</option>
+            </select>
+        </div>
+        
+        <form id="form">
+            <input type="text" id="search" class="search" placeholder="Busca tu personaje">
+        </form>
+    </div>
+</header>
+
+<main id="main"></main>
+
+<script>
+    // Constantes de las APIs
+    const API_RICK = 'https://rickandmortyapi.com/api/character';
+    const API_HP = 'https://hp-api.onrender.com/api/characters';
+    
+    // Elementos del DOM
+    const main = document.getElementById('main');
+    const form = document.getElementById('form');
+    const search = document.getElementById('search');
+    const apiSelector = document.getElementById('apiSelector');
+    
+    // Variable para almacenar todos los personajes
+    let allRickChars = [];
+    let allHpChars = [];
+
+    // Carga inicial de todas las APIs
+    loadAllCharacters();
+
+    // Cargar todos los personajes de ambas APIs
+    async function loadAllCharacters() {
+        const [rmRes, hpRes] = await Promise.all([
+            fetch(API_RICK).then(res => res.json()),
+            fetch(API_HP).then(res => res.json())
+        ]);
+
+        //Se guardan los arrays de personajes.
+        allRickChars = rmRes.results || [];
+        allHpChars = hpRes || [];
+
+        // Mostrar todos los personajes inicialmente
+        showFilteredCharacters();
+    }
+
+    // Mostrar personajes según el filtro seleccionado
+    function showFilteredCharacters() {
+        const apiValue = apiSelector.value;
+        let charactersToShow = [];
+        
+        if (apiValue === 'rick') {
+            charactersToShow = [...allRickChars];
+        } else { // 'harry'
+            charactersToShow = [...allHpChars];
+        }
+
+        // Si hay un término de búsqueda, filtrar también por nombre
+        const searchTerm = search.value.toLowerCase();
+        if (searchTerm && searchTerm !== '') {
+            charactersToShow = charactersToShow.filter(char => 
+                char.name.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        showCharacters(charactersToShow);
+    }
+
+    // Escuchar cambios en el selector de API
+    apiSelector.addEventListener('change', () => {
+        showFilteredCharacters();
+    });
+
+    //Se llama a showCharacters para mostrar los personajes
+    function showCharacters(characters) {
+        main.innerHTML = '';
+
+        characters.forEach((char) => {
+            let name = char.name || 'Desconocido';
+            
+            // Determinamos si es un personaje de Rick and Morty o de Harry Potter
+            const isRickMorty = char.species !== undefined;
+            const characterClass = isRickMorty ? 'rm' : 'hp';
+            
+            const characterElement = document.createElement('div');
+            characterElement.classList.add('character', characterClass);
+            
+            if (isRickMorty) {
+                // Personaje de Rick and Morty
+                const { image, status, species, gender, origin, location, episode } = char;
+                
+                let statusClass = '';
+                if (status === 'Alive') statusClass = 'status-alive';
+                else if (status === 'Dead') statusClass = 'status-dead';
+                else statusClass = 'status-unknown';
+                
+                characterElement.innerHTML = `
+                    <img src="${image}" alt="${name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/350x500?text=No+Image';">
+                    <div class="character-info">
+                        <h3>${name}</h3>
+                        <div class="details">
+                            <span class="${statusClass}">${status || 'Desconocido'}</span>
+                            <span>${species || 'Especie desconocida'}</span>
+                        </div>
+                    </div>
+                    <div class="overview">
+                        <h3>Detalles</h3>
+                        <p><strong>Género:</strong> ${gender || 'Desconocido'}</p>
+                        <p><strong>Origen:</strong> ${origin && origin.name ? origin.name : 'Desconocido'}</p>
+                        <p><strong>Ubicación:</strong> ${location && location.name ? location.name : 'Desconocido'}</p>
+                        <p><strong>Apariciones:</strong> ${episode && episode.length ? episode.length : 0} episodios</p>
+                    </div>
+                `;
+            } else {
+                // Personaje de Harry Potter
+                const { image, house, ancestry, dateOfBirth, gender, actor, alive, wand } = char;
+                
+                // Omitir personajes sin imagen
+                if (!image || image === "") return;
+                
+                const houseClass = house ? house.toLowerCase() : '';
+                const wandCore = wand && wand.core ? wand.core : 'Desconocido';
+                const wandLength = wand && wand.length ? wand.length : 'Desconocido';
+                
+                characterElement.innerHTML = `
+                    <img src="${image}" alt="${name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/350x500?text=No+Image';">
+                    <div class="character-info">
+                        <h3>${name}</h3>
+                        <div class="details">
+                            ${house ? `<span class="house-badge ${houseClass}">${house}</span>` : '<span>Sin casa</span>'}
+                            <span>${gender || 'Desconocido'}</span>
+                        </div>
+                    </div>
+                    <div class="overview">
+                        <h3>Detalles</h3>
+                        <p><strong>Actor/Actriz:</strong> ${actor || 'Desconocido'}</p>
+                        <p><strong>Status:</strong> ${alive !== undefined ? alive ? '<span class="status-alive">Vivo</span>' : '<span class="status-dead">Fallecido</span>' : '<span class="status-unknown">Desconocido</span>'}</p>
+                        <p><strong>Ancestro:</strong> ${ancestry || 'Desconocido'}</p>
+                        <p><strong>Fecha de nacimiento:</strong> ${dateOfBirth || 'Desconocido'}</p>
+                        <p><strong>Varita:</strong></p>
+                        <p>- Núcleo: ${wandCore}</p>
+                        <p>- Longitud: ${wandLength} pulgadas</p>
+                    </div>
+                `;
+            }
+            
+            main.appendChild(characterElement);
+        });
+    }
+
+    // Manejo de búsqueda
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        showFilteredCharacters();
+    });
+</script>
+
+</body>
+</html>
