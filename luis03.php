@@ -172,7 +172,7 @@ $resultado = $conexion->query($sql);
     </style>
 </head>
 <body>
-    <!-- Menú de navegación -->
+
     <nav class="navbar navbar-light">
         <div class="container">
             <a class="navbar-brand" href="index.html" style="color:white;">INICIO</a>
